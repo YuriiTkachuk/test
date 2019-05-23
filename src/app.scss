@@ -1,0 +1,34 @@
+.container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .content {
+        display: flex;
+        width: 100%;
+        margin: 0 100px;
+        height: 400px;
+        background: white;
+        box-shadow: 0px 0px 25px black;
+        border-radius: 5px;
+
+        .col {
+            margin: 20px 0;
+            overflow-y: scroll;
+
+            span {
+                cursor: pointer;
+                display: flex;
+                height: 40px;
+                align-items: center;
+                padding-left: 10px;
+                border-radius: 5px;
+            }
+
+            .active {
+                background: rgb(0,115,227);
+                color: white;
+            }
+        }
+    }
+}
