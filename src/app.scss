@@ -4,30 +4,61 @@
     justify-content: center;
     align-items: center;
     .content {
-        display: flex;
         width: 100%;
         margin: 0 100px;
-        height: 400px;
         background: white;
         box-shadow: 0px 0px 25px black;
         border-radius: 5px;
 
-        .col {
-            margin: 20px 0;
-            overflow-y: scroll;
+        .head {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid black;
 
             span {
-                cursor: pointer;
-                display: flex;
-                height: 40px;
-                align-items: center;
-                padding-left: 10px;
-                border-radius: 5px;
+                font-weight: bold;
+                font-size: 20px;
+
+                &:nth-child(1),
+                &:nth-child(2),
+                &:nth-child(3) {
+                    width: 20%
+                }
+
+                &:nth-child(1) {
+                    margin-left: 10px;
+                }
+            }
+        }
+
+        .body {
+            display: flex;
+            height: 400px;
+            .gmaps {
+                margin-bottom: 20px;
+                margin-top: 10px;
             }
 
-            .active {
-                background: rgb(0,115,227);
-                color: white;
+            .col {
+                margin-bottom: 20px;
+                margin-top: 10px;
+                overflow-y: scroll;
+                width: 20%;
+
+                span {
+                    cursor: pointer;
+                    display: flex;
+                    height: 40px;
+                    align-items: center;
+                    padding-left: 10px;
+                    border-radius: 5px;
+                }
+
+                .active {
+                    background: rgb(0,115,227);
+                    color: white;
+                }
             }
         }
     }

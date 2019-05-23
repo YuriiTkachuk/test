@@ -18,9 +18,6 @@ let cities = counter(customers.filter(w => w.Country === sortCountries[0]).map(w
 let sortCities = Object.entries(cities).sort((a,b) => b[1] - a[1]).map(w => w[0]);
 let sortCompany = customers.filter(w => w.Country === sortCountries[0] && w.City === sortCities[0]).map(w => w.CompanyName).sort();
 
-console.log(sortCompany)
-
-
 export class App extends React.Component {
     constructor(props) {
         super(props);
@@ -37,17 +34,7 @@ export class App extends React.Component {
     componentDidMount() {
         const { country, city, company } = this.state;
         const address = customers.filter(w => w.CompanyName === company && w.City === city && w.Country === country)[0]['Address']
-        Geocode.fromAddress(`${city} ${address}`).then(
-            response => {
-                this.setState({
-                    lat: response.results[0].geometry.location.lat,
-                    lng: response.results[0].geometry.location.lng,
-                })
-            },
-            error => {
-                console.error(error);
-            }
-        );
+        this.findCoords(city, address)
     };
 
     componentDidUpdate(prevProps, prevState) {
@@ -60,19 +47,22 @@ export class App extends React.Component {
         }
         if (company !== prevState.company) {
             const address = customers.filter(w => w.CompanyName === company && w.City === city && w.Country === country)[0]['Address']
-            console.log(address)
-            Geocode.fromAddress(`${city}, ${address}`).then(
-                response => {
-                    this.setState({
-                        lat: response.results[0].geometry.location.lat,
-                        lng: response.results[0].geometry.location.lng,
-                    })
-                },
-                error => {
-                    console.error(error);
-                }
-            );
+            this.findCoords(city, address)
         }
+    };
+
+    findCoords = (city, address) => {
+        Geocode.fromAddress(`${city} ${address}`).then(
+            response => {
+                this.setState({
+                    lat: response.results[0].geometry.location.lat,
+                    lng: response.results[0].geometry.location.lng,
+                })
+            },
+            error => {
+                console.error(error);
+            }
+        );
     };
 
     onMapCreated(map) {
@@ -97,29 +87,38 @@ export class App extends React.Component {
         return (
             <div className="container">
                 <div className="content">
-                    <div className="col">
-                        {sortCountries.map((c, i) => <span key={i} className={c === country ? 'active' : ''} onClick={(e) => this.handleClick(e, 'country')}>{c}</span>)}
+                    <div className="head">
+                        <span>Countries</span>
+                        <span>Cities</span>
+                        <span>Company</span>
+                        <span>Map</span>
                     </div>
-                    <div className="col">
-                        {sortCities.map((c, i) => <span key={i} className={c === city ? 'active' : ''} onClick={(e) => this.handleClick(e, 'city')}>{c}</span>)}
+                    <div className="body">
+                        <div className="col">
+                            {sortCountries.map((c, i) => <span key={i} className={c === country ? 'active' : ''} onClick={(e) => this.handleClick(e, 'country')}>{c}</span>)}
+                        </div>
+                        <div className="col">
+                            {sortCities.map((c, i) => <span key={i} className={c === city ? 'active' : ''} onClick={(e) => this.handleClick(e, 'city')}>{c}</span>)}
+                        </div>
+                        <div className="col">
+                            {sortCompany.map((c, i) => <span key={i} className={c === company ? 'active' : ''} onClick={(e) => this.handleClick(e, 'company')}>{c}</span>)}
+                        </div>
+                        <Gmaps
+                          width={'40%'}
+                          height={'370px'}
+                          className="gmaps"
+                          lat={lat}
+                          lng={lng}
+                          zoom={12}
+                          params={params}
+                          onMapCreated={this.onMapCreated}>
+                              <Marker
+                                lat={lat}
+                                lng={lng}
+                                draggable={true} />
+                        </Gmaps>
                     </div>
-                    <div className="col">
-                        {sortCompany.map((c, i) => <span key={i} className={c === company ? 'active' : ''} onClick={(e) => this.handleClick(e, 'company')}>{c}</span>)}
-                    </div>
-                    <Gmaps
-                      width={'300px'}
-                      height={'400px'}
-                      lat={lat}
-                      lng={lng}
-                      zoom={12}
-                      params={params}
-                      onMapCreated={this.onMapCreated}>
-                          <Marker
-                            lat={lat}
-                            lng={lng}
-                            draggable={true} />
-                    </Gmaps>
-                  </div>
+                </div>
             </div>
         );
     }
